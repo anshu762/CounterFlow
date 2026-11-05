@@ -12,6 +12,7 @@
   },
   "scripts": {
     "dev:backend": "npm run dev -w backend",
+    "dev:dashboard": "npm run dev --prefix dashboard",
     "test": "npm run test -w backend",
     "lint": "eslint .",
     "format": "prettier --write .",
