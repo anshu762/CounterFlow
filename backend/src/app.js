@@ -10,14 +10,18 @@ import healthRouter from './modules/health/health.routes.js';
 
 export function createApp() {
   const app = express();
+  // Development convenience: Vite, Flutter web etc. use varying localhost ports.
+  const LOCAL_DEV_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 
   app.set('trust proxy', 1); // Render sits behind a proxy (needed for rate limiting later)
   app.use(helmet());
-  app.use(
+    app.use(
     cors({
       origin(origin, cb) {
         // No origin = curl/Postman/mobile app; allowed.
-        if (!origin || env.corsOrigins.includes(origin)) return cb(null, true);
+        if (!origin) return cb(null, true);
+        if (env.corsOrigins.includes(origin)) return cb(null, true);
+        if (!env.isProd && LOCAL_DEV_ORIGIN.test(origin)) return cb(null, true);
         return cb(new AppError('Origin not allowed', 403, 'CORS_BLOCKED'));
       },
       credentials: true,

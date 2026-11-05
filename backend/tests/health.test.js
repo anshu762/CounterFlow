@@ -33,6 +33,17 @@ describe('error handling', () => {
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe('INVALID_JSON');
   });
+  
+    it('allows any localhost port outside production (Flutter web / Vite)', async () => {
+    const res = await request(app).get('/health').set('Origin', 'http://localhost:59639');
+    expect(res.status).toBe(200);
+    expect(res.headers['access-control-allow-origin']).toBe('http://localhost:59639');
+  });
+
+  it('still blocks non-local origins that only look similar', async () => {
+    const res = await request(app).get('/health').set('Origin', 'http://localhost.evil.com');
+    expect(res.status).toBe(403);
+  });
 
   it('blocks disallowed CORS origins', async () => {
     const res = await request(app).get('/health').set('Origin', 'http://evil.example');
