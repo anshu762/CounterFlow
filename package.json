@@ -1,0 +1,32 @@
+{
+  "name": "counterflow",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "backend",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:backend": "npm run dev -w backend",
+    "test": "npm run test -w backend",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "migrate:create": "node-pg-migrate create -m database/migrations --migration-file-language sql",
+    "migrate:up": "dotenv -e backend/.env -- node-pg-migrate up -m database/migrations -d DATABASE_URL_DIRECT",
+    "migrate:down": "dotenv -e backend/.env -- node-pg-migrate down -m database/migrations -d DATABASE_URL_DIRECT"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "dotenv-cli": "^11.1.0",
+    "eslint": "^10.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.14.0",
+    "node-pg-migrate": "^9.0.0",
+    "prettier": "^3.9.10"
+  }
+}
