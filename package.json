@@ -19,7 +19,8 @@
     "format:check": "prettier --check .",
     "migrate:create": "node-pg-migrate create -m database/migrations --migration-file-language sql",
     "migrate:up": "dotenv -e backend/.env -- node-pg-migrate up -m database/migrations -d DATABASE_URL_DIRECT",
-    "migrate:down": "dotenv -e backend/.env -- node-pg-migrate down -m database/migrations -d DATABASE_URL_DIRECT"
+    "migrate:down": "dotenv -e backend/.env -- node-pg-migrate down -m database/migrations -d DATABASE_URL_DIRECT",
+    "migrate:up:env": "node-pg-migrate up -m database/migrations -d DATABASE_URL_DIRECT"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

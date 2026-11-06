@@ -15,7 +15,7 @@ export function createApp() {
 
   app.set('trust proxy', 1); // Render sits behind a proxy (needed for rate limiting later)
   app.use(helmet());
-    app.use(
+  app.use(
     cors({
       origin(origin, cb) {
         // No origin = curl/Postman/mobile app; allowed.
