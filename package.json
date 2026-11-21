@@ -22,7 +22,7 @@
     "migrate:down": "dotenv -e backend/.env -- node-pg-migrate down -m database/migrations -d DATABASE_URL_DIRECT",
     "migrate:up:env": "node-pg-migrate up -m database/migrations -d DATABASE_URL_DIRECT",
     "db:verify": "dotenv -e backend/.env -- node database/scripts/verify-schema.cjs",
-    "seed:owner": "dotenv -e backend/.env -- node backend/src/scripts/seed-owner.js",
+    "seed:owner": "dotenv -e backend/.env -- node database/seeds/seed-owner.js",
     "db:menu:check": "node database/scripts/seed-menu.cjs --check",
     "db:menu:seed": "dotenv -e backend/.env -- node database/scripts/seed-menu.cjs",
     "db:menu:images": "dotenv -e backend/.env -- node database/scripts/fetch-images.cjs",

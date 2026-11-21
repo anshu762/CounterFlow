@@ -51,7 +51,10 @@ export function createAuthService({ store, now = () => new Date() }) {
 
   async function login({ email, password, ip, userAgent }) {
     const user = await store.findAdminByEmail(email);
-    const passwordOk = await bcrypt.compare(password, user?.password_hash ?? (await getDummyHash()));
+    const passwordOk = await bcrypt.compare(
+      password,
+      user?.password_hash ?? (await getDummyHash()),
+    );
     if (!user || !passwordOk) {
       throw new AppError('Incorrect email or password', 401, 'INVALID_CREDENTIALS');
     }

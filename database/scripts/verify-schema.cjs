@@ -1,4 +1,4 @@
-/* global process, console, __dirname, fetch, setTimeout, clearTimeout, Buffer, URL */
+/* global process, console */
 'use strict';
 const { Client } = require('pg');
 

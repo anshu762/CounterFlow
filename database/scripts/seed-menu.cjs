@@ -1,4 +1,4 @@
-/* global process, console, __dirname, fetch, setTimeout, clearTimeout, Buffer, URL */
+/* global process, console */
 'use strict';
 // Usage:
 //   node database/scripts/seed-menu.cjs --check   (no database; validates the data and prints counts)

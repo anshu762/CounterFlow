@@ -252,7 +252,9 @@ describe('POST /api/auth/logout', () => {
 describe('role checks', () => {
   const guarded = () => {
     const a = express();
-    a.get('/owner-only', requireAuth, requireOwner, (req, res) => res.json({ role: req.auth.role }));
+    a.get('/owner-only', requireAuth, requireOwner, (req, res) =>
+      res.json({ role: req.auth.role }),
+    );
     a.use(errorHandler);
     return a;
   };

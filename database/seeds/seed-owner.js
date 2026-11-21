@@ -13,10 +13,7 @@ const schema = z.object({
     .toLowerCase()
     .max(254)
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'must be a valid email'),
-  OWNER_PASSWORD: z
-    .string()
-    .min(10, 'must be at least 10 characters')
-    .max(200),
+  OWNER_PASSWORD: z.string().min(10, 'must be at least 10 characters').max(200),
 });
 
 const parsed = schema.safeParse(process.env);

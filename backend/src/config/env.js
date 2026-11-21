@@ -18,10 +18,7 @@ const schema = z.object({
     .regex(/^\d+[smhd]$/, 'use a value like 15m, 1h or 7d')
     .default('15m'),
   REFRESH_TOKEN_TTL_DAYS: z.coerce.number().int().min(1).max(365).default(30),
-  BCRYPT_ROUNDS: z.preprocess(
-    emptyToUndefined,
-    z.coerce.number().int().min(4).max(15).optional(),
-  ),
+  BCRYPT_ROUNDS: z.preprocess(emptyToUndefined, z.coerce.number().int().min(4).max(15).optional()),
 });
 
 const parsed = schema.safeParse(process.env);

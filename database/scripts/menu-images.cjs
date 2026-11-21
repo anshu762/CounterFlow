@@ -1,4 +1,4 @@
-/* global process, console, __dirname, fetch, setTimeout, clearTimeout, Buffer, URL */
+/* global process, console, __dirname, fetch, setTimeout, Buffer, URL, URLSearchParams */
 'use strict';
 /*
   Fill menu item images.
