@@ -11,7 +11,6 @@ export function notFound(req, res) {
 
 // error related db if connection fail some reasons
 
-// eslint-disable-next-line no-unused-vars
 export function errorHandler(err, req, res, _next) {
   if (err instanceof ZodError) {
     return res.status(400).json({

@@ -1,3 +1,4 @@
+/* global process, console, __dirname, fetch, setTimeout, clearTimeout, Buffer, URL */
 'use strict';
 // Fills menu_items.image_url with food photos from Pexels (free API key: https://www.pexels.com/api/).
 // Only touches items that have NO image yet, so your own uploads are never replaced.

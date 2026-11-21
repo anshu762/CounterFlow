@@ -1,3 +1,4 @@
+/* global process, console, __dirname, fetch, setTimeout, clearTimeout, Buffer, URL */
 'use strict';
 /*
   Fill menu item images.
