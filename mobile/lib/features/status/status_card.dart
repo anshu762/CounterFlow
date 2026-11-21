@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../core/palette.dart';
 
 enum ServiceState { loading, ok, degraded, error }
 
@@ -12,10 +13,10 @@ class _Look {
 }
 
 const _looks = {
-  ServiceState.ok: _Look('Operational', Color(0xFF059669), Color(0xFFECFDF5)),
-  ServiceState.degraded: _Look('Degraded', Color(0xFFD97706), Color(0xFFFFFBEB)),
-  ServiceState.error: _Look('Unreachable', Color(0xFFDC2626), Color(0xFFFEF2F2)),
-  ServiceState.loading: _Look('Checking…', Color(0xFF78716C), Color(0xFFF5F5F4)),
+  ServiceState.ok: _Look('Operational', AppColors.success, AppColors.successBg),
+  ServiceState.degraded: _Look('Degraded', AppColors.warning, AppColors.warningBg),
+  ServiceState.error: _Look('Unreachable', AppColors.danger, AppColors.dangerBg),
+  ServiceState.loading: _Look('Checking…', AppColors.softText, AppColors.sand),
 };
 
 class StatusCard extends StatelessWidget {
@@ -47,9 +48,9 @@ class StatusCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFFE7E5E4)),
+          border: Border.all(color: AppColors.line),
           boxShadow: const [
             BoxShadow(color: Color(0x0F000000), blurRadius: 12, offset: Offset(0, 4)),
           ],
@@ -63,10 +64,10 @@ class StatusCard extends StatelessWidget {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFF7ED),
+                    color: AppColors.gold100,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(icon, color: brandOrange),
+                  child: Icon(icon, color: AppColors.brand),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -93,7 +94,7 @@ class StatusCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(r.key, style: const TextStyle(color: Color(0xFF78716C))),
+                                Text(r.key, style: const TextStyle(color: AppColors.muted)),
                                 const SizedBox(width: 16),
                                 Flexible(
                                   child: Text(
@@ -110,7 +111,7 @@ class StatusCard extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
                               note!,
-                              style: const TextStyle(color: Color(0xFF78716C), fontSize: 14),
+                              style: const TextStyle(color: AppColors.muted, fontSize: 14),
                             ),
                           ),
                       ],
@@ -125,8 +126,6 @@ class StatusCard extends StatelessWidget {
         .slideY(begin: 0.15, end: 0, duration: 500.ms, curve: Curves.easeOut);
   }
 }
-
-const Color brandOrange = Color(0xFFEA580C);
 
 class _Badge extends StatelessWidget {
   const _Badge({required this.look, required this.pulse});
@@ -204,8 +203,8 @@ class _Skeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: const Color(0xFFF5F5F4),
-      highlightColor: const Color(0xFFFFFFFF),
+      baseColor: AppColors.sand,
+      highlightColor: Colors.white,
       child: Column(
         children: [
           for (var i = 0; i < 3; i++)

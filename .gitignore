@@ -9,3 +9,7 @@ coverage/
 .DS_Store
 .vscode/*
 !.vscode/extensions.json
+database/seeds/images/*
+!database/seeds/images/.gitkeep
+database/seeds/image-cache.json
+database/seeds/image-cache-pixabay.json

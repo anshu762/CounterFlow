@@ -57,13 +57,13 @@ export default function StatusPage() {
       {/* Animated background blobs */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-brand-200/60 blur-3xl"
+        className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-gold-200/50 blur-3xl"
         animate={{ x: [0, 40, 0], y: [0, 30, 0] }}
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-amber-200/60 blur-3xl"
+        className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-brand-100/70 blur-3xl"
         animate={{ x: [0, -40, 0], y: [0, -30, 0] }}
         transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
       />
@@ -76,25 +76,43 @@ export default function StatusPage() {
           className="mb-8 text-center"
         >
           <motion.span
-            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-lg shadow-brand-600/30"
+            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-lg shadow-brand-600/30 ring-4 ring-gold-200"
             animate={{ rotate: [0, -6, 6, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           >
             <Coffee size={32} aria-hidden="true" />
           </motion.span>
-          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Counter<span className="text-brand-600">Flow</span>
           </h1>
-          <p className="mt-2 text-stone-600">System status</p>
+
+          {/* Classic ornament divider */}
+          <div className="mx-auto mt-3 flex w-40 items-center gap-2" aria-hidden="true">
+            <span className="h-px flex-1 bg-gold-400" />
+            <span className="h-2 w-2 rotate-45 bg-gold-500" />
+            <span className="h-px flex-1 bg-gold-400" />
+          </div>
+
+          <p className="mt-3 text-stone-600">System status</p>
         </motion.header>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
-          <StatusCard title="API server" icon={Server} state={apiState} rows={apiRows}
+          <StatusCard
+            title="API server"
+            icon={Server}
+            state={apiState}
+            rows={apiRows}
             note={apiState === 'error' ? 'Cannot reach the API. Is the backend running?' : undefined}
-            index={0} />
-          <StatusCard title="Database (Neon)" icon={Database} state={dbState} rows={dbRows}
+            index={0}
+          />
+          <StatusCard
+            title="Database (Neon)"
+            icon={Database}
+            state={dbState}
+            rows={dbRows}
             note={dbState === 'degraded' ? 'API is up, but the database check failed.' : undefined}
-            index={1} />
+            index={1}
+          />
         </div>
 
         <div className="mt-8 flex justify-center">

@@ -1,7 +1,9 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/config.dart';
+import '../../core/palette.dart';
 import 'status_card.dart';
 import 'status_providers.dart';
 
@@ -89,7 +91,7 @@ class StatusScreen extends ConsumerWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFFFFF7ED), Color(0xFFFAFAF9), Color(0xFFFEF3C7)],
+            colors: [Color(0xFFF7EFE0), AppColors.paper, Color(0xFFF3E8CF)],
           ),
         ),
         child: SafeArea(
@@ -135,12 +137,12 @@ class StatusScreen extends ConsumerWidget {
                     const SizedBox(height: 12),
                     const Text(
                       'Auto-refreshes every 15 seconds',
-                      style: TextStyle(fontSize: 12, color: Color(0xFF78716C)),
+                      style: TextStyle(fontSize: 12, color: AppColors.muted),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       apiBaseUrl,
-                      style: const TextStyle(fontSize: 12, color: Color(0xFFA8A29E)),
+                      style: const TextStyle(fontSize: 12, color: AppColors.muted),
                     ),
                   ],
                 ),
@@ -164,10 +166,11 @@ class _Header extends StatelessWidget {
           width: 64,
           height: 64,
           decoration: BoxDecoration(
-            color: brandOrange,
+            color: AppColors.brand,
             borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: AppColors.gold200, width: 3),
             boxShadow: const [
-              BoxShadow(color: Color(0x4DEA580C), blurRadius: 16, offset: Offset(0, 6)),
+              BoxShadow(color: Color(0x4D7F1D2D), blurRadius: 16, offset: Offset(0, 6)),
             ],
           ),
           child: const Icon(Icons.coffee_rounded, color: Colors.white, size: 32),
@@ -177,16 +180,53 @@ class _Header extends StatelessWidget {
         const SizedBox(height: 16),
         RichText(
           text: const TextSpan(
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800, color: Color(0xFF1C1917)),
+            style: TextStyle(
+              fontFamily: displayFont,
+              fontSize: 32,
+              fontWeight: FontWeight.w700,
+              color: AppColors.ink,
+            ),
             children: [
               TextSpan(text: 'Counter'),
-              TextSpan(text: 'Flow', style: TextStyle(color: brandOrange)),
+              TextSpan(text: 'Flow', style: TextStyle(color: AppColors.brand)),
             ],
           ),
         ).animate().fadeIn(duration: 500.ms).slideY(begin: -0.3, end: 0),
-        const SizedBox(height: 4),
-        const Text('System status', style: TextStyle(color: Color(0xFF57534E))),
+        const SizedBox(height: 10),
+        const _Ornament(),
+        const SizedBox(height: 10),
+        const Text('System status', style: TextStyle(color: AppColors.softText)),
       ],
+    );
+  }
+}
+
+/// Classic line-diamond-line divider.
+class _Ornament extends StatelessWidget {
+  const _Ornament();
+
+  @override
+  Widget build(BuildContext context) {
+    return ExcludeSemantics(
+      child: SizedBox(
+        width: 160,
+        child: Row(
+          children: [
+            const Expanded(child: Divider(color: AppColors.gold400, thickness: 1, height: 1)),
+            const SizedBox(width: 8),
+            Transform.rotate(
+              angle: math.pi / 4,
+              child: const SizedBox(
+                width: 8,
+                height: 8,
+                child: ColoredBox(color: AppColors.gold),
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Expanded(child: Divider(color: AppColors.gold400, thickness: 1, height: 1)),
+          ],
+        ),
+      ),
     );
   }
 }

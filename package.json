@@ -20,7 +20,12 @@
     "migrate:create": "node-pg-migrate create -m database/migrations --migration-file-language sql",
     "migrate:up": "dotenv -e backend/.env -- node-pg-migrate up -m database/migrations -d DATABASE_URL_DIRECT",
     "migrate:down": "dotenv -e backend/.env -- node-pg-migrate down -m database/migrations -d DATABASE_URL_DIRECT",
-    "migrate:up:env": "node-pg-migrate up -m database/migrations -d DATABASE_URL_DIRECT"
+    "migrate:up:env": "node-pg-migrate up -m database/migrations -d DATABASE_URL_DIRECT",
+    "db:verify": "dotenv -e backend/.env -- node database/scripts/verify-schema.cjs",
+    "db:menu:check": "node database/scripts/seed-menu.cjs --check",
+    "db:menu:seed": "dotenv -e backend/.env -- node database/scripts/seed-menu.cjs",
+    "db:menu:images": "dotenv -e backend/.env -- node database/scripts/fetch-images.cjs",
+    "db:menu:images:pixabay": "dotenv -e backend/.env -- node database/scripts/menu-images.cjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
