@@ -9,10 +9,28 @@ import { AppError } from './utils/errors.js';
 import { notFound, errorHandler } from './middleware/error.js';
 import healthRouter from './modules/health/health.routes.js';
 import { createAuthRouter } from './modules/auth/auth.routes.js';
+import { createCustomerAuthRouter } from './modules/auth/customer-auth.routes.js';
+import { createAuthService } from './modules/auth/auth.service.js';
 import { createPgAuthStore } from './modules/auth/auth.store.js';
+import { createAuditLog } from './modules/audit/audit.js';
+import { createSettingsService } from './modules/settings/settings.service.js';
+import { createPgSettingsStore } from './modules/settings/settings.store.js';
+import {
+  createCafePublicRouter,
+  createSettingsRouter,
+} from './modules/settings/settings.routes.js';
+import { createUsersService } from './modules/users/users.service.js';
+import { createUsersRouter } from './modules/users/users.routes.js';
 
-// Options exist so tests can inject an in-memory store and relaxed rate limits.
-export function createApp({ authStore, loginRateLimit, refreshRateLimit } = {}) {
+// Options exist so tests can inject in-memory stores and relaxed rate limits.
+export function createApp({
+  authStore,
+  settingsStore,
+  auditLog,
+  loginRateLimit,
+  refreshRateLimit,
+  signupRateLimit,
+} = {}) {
   const app = express();
 
   // Development convenience: Vite, Flutter web etc. use varying localhost ports.
@@ -44,14 +62,31 @@ export function createApp({ authStore, loginRateLimit, refreshRateLimit } = {}) 
   app.use('/health', healthRouter);
   app.use('/api/health', healthRouter);
 
+  const adminStore = authStore ?? createPgAuthStore(pool);
+  const audit = auditLog ?? createAuditLog(pool);
+  const authService = createAuthService({ store: adminStore, audit });
+  const settingsService = createSettingsService({
+    store: settingsStore ?? createPgSettingsStore(pool),
+    audit,
+  });
+  const usersService = createUsersService({ store: adminStore, audit });
+
   app.use(
     '/api/auth',
-    createAuthRouter({
-      store: authStore ?? createPgAuthStore(pool),
+    createAuthRouter({ service: authService, loginRateLimit, refreshRateLimit }),
+  );
+  app.use(
+    '/api/customer/auth',
+    createCustomerAuthRouter({
+      service: authService,
+      signupRateLimit,
       loginRateLimit,
       refreshRateLimit,
     }),
   );
+  app.use('/api/cafe', createCafePublicRouter({ service: settingsService }));
+  app.use('/api/settings', createSettingsRouter({ service: settingsService, adminStore }));
+  app.use('/api/users', createUsersRouter({ service: usersService, adminStore }));
 
   // More feature modules are mounted under /api in later parts.
   app.use(notFound);

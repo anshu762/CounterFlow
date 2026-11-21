@@ -1,26 +1,16 @@
 import { Router } from 'express';
-import rateLimit from 'express-rate-limit';
-import { AppError } from '../../utils/errors.js';
 import { validate } from '../../middleware/validate.js';
-import { requireAuth } from '../../middleware/auth.js';
+import { requireAuth, requireStaff } from '../../middleware/auth.js';
+import { makeLimiter } from '../../middleware/rateLimit.js';
 import { loginSchema, refreshSchema } from './auth.schemas.js';
-import { createAuthService } from './auth.service.js';
+import { changePasswordSchema } from './password.schemas.js';
+import { noStore, clientMeta } from './auth.http.js';
 
 const FIFTEEN_MIN = 15 * 60 * 1000;
 
-function makeLimiter(options) {
-  return rateLimit({
-    standardHeaders: 'draft-7',
-    legacyHeaders: false,
-    handler: (_req, _res, next) =>
-      next(new AppError('Too many attempts. Please try again later.', 429, 'RATE_LIMITED')),
-    ...options,
-  });
-}
-
-export function createAuthRouter({ store, loginRateLimit, refreshRateLimit }) {
+// Staff (owner / staff) endpoints, mounted at /api/auth.
+export function createAuthRouter({ service, loginRateLimit, refreshRateLimit }) {
   const router = Router();
-  const service = createAuthService({ store });
 
   // Only failed logins count towards the limit (successful ones are skipped).
   const loginLimiter = makeLimiter({
@@ -29,21 +19,22 @@ export function createAuthRouter({ store, loginRateLimit, refreshRateLimit }) {
     skipSuccessfulRequests: true,
     ...loginRateLimit,
   });
+  const passwordLimiter = makeLimiter({
+    windowMs: FIFTEEN_MIN,
+    limit: 10,
+    skipSuccessfulRequests: true,
+    ...loginRateLimit,
+  });
   const refreshLimiter = makeLimiter({ windowMs: FIFTEEN_MIN, limit: 60, ...refreshRateLimit });
 
-  router.use((_req, res, next) => {
-    res.set('Cache-Control', 'no-store');
-    next();
-  });
-
-  const meta = (req) => ({ ip: req.ip, userAgent: req.get('user-agent') });
+  router.use(noStore);
 
   router.post('/login', loginLimiter, validate(loginSchema), async (req, res) => {
-    res.json(await service.login({ ...req.body, ...meta(req) }));
+    res.json(await service.login({ ...req.body, ...clientMeta(req) }));
   });
 
   router.post('/refresh', refreshLimiter, validate(refreshSchema), async (req, res) => {
-    res.json(await service.refresh({ ...req.body, ...meta(req) }));
+    res.json(await service.refresh({ ...req.body, ...clientMeta(req) }));
   });
 
   router.post('/logout', validate(refreshSchema), async (req, res) => {
@@ -51,9 +42,26 @@ export function createAuthRouter({ store, loginRateLimit, refreshRateLimit }) {
     res.status(204).end();
   });
 
-  router.get('/me', requireAuth, async (req, res) => {
+  router.get('/me', requireAuth, requireStaff, async (req, res) => {
     res.json(await service.me(req.auth.userId));
   });
+
+  router.post(
+    '/change-password',
+    requireAuth,
+    requireStaff,
+    passwordLimiter,
+    validate(changePasswordSchema),
+    async (req, res) => {
+      res.json(
+        await service.changeAdminPassword({
+          userId: req.auth.userId,
+          ...req.body,
+          ...clientMeta(req),
+        }),
+      );
+    },
+  );
 
   return router;
 }

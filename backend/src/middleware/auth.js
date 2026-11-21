@@ -1,5 +1,5 @@
 import { AppError } from '../utils/errors.js';
-import { ROLES, ROLE_OWNER } from '../modules/auth/roles.js';
+import { ALL_ROLES, ROLE_CUSTOMER, ROLE_OWNER, ROLE_STAFF } from '../modules/auth/roles.js';
 import { verifyAccessToken } from '../modules/auth/tokens.js';
 
 // Reads "Authorization: Bearer <jwt>" and sets req.auth = { userId, role }.
@@ -17,7 +17,7 @@ export function requireAuth(req, _res, next) {
     }
     throw new AppError('Invalid token', 401, 'INVALID_TOKEN');
   }
-  if (!payload.sub || !ROLES.includes(payload.role)) {
+  if (!payload.sub || !ALL_ROLES.includes(payload.role)) {
     throw new AppError('Invalid token', 401, 'INVALID_TOKEN');
   }
   req.auth = { userId: payload.sub, role: payload.role };
@@ -36,3 +36,5 @@ export const requireRole =
   };
 
 export const requireOwner = requireRole(ROLE_OWNER);
+export const requireStaff = requireRole(ROLE_OWNER, ROLE_STAFF); // dashboard users
+export const requireCustomer = requireRole(ROLE_CUSTOMER); // mobile app users
