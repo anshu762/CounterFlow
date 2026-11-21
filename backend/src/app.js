@@ -15,6 +15,7 @@ import { createPgAuthStore } from './modules/auth/auth.store.js';
 import { createAuditLog } from './modules/audit/audit.js';
 import { createSettingsService } from './modules/settings/settings.service.js';
 import { createPgSettingsStore } from './modules/settings/settings.store.js';
+import { createMenuModule } from './modules/menu/menu.module.js';
 import {
   createCafePublicRouter,
   createSettingsRouter,
@@ -26,6 +27,8 @@ import { createUsersRouter } from './modules/users/users.routes.js';
 export function createApp({
   authStore,
   settingsStore,
+  menuStore,
+  imageStorage,
   auditLog,
   loginRateLimit,
   refreshRateLimit,
@@ -87,6 +90,7 @@ export function createApp({
   app.use('/api/cafe', createCafePublicRouter({ service: settingsService }));
   app.use('/api/settings', createSettingsRouter({ service: settingsService, adminStore }));
   app.use('/api/users', createUsersRouter({ service: usersService, adminStore }));
+  app.use('/api', createMenuModule({ pool, authStore, menuStore, imageStorage }));
 
   // More feature modules are mounted under /api in later parts.
   app.use(notFound);
