@@ -18,12 +18,19 @@ function VegMark({ isVeg }) {
   );
 }
 
-export default function ItemCard({ item, categoryLabel, canEdit, onEdit }) {
+// `drag` is optional: { setNodeRef, style, isDragging, handle } from the sortable grid.
+export default function ItemCard({ item, categoryLabel, canEdit, onEdit, drag }) {
   const availability = useSetAvailability();
   const sizes = item.variants?.length ?? 0;
 
   return (
-    <li className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
+    <li
+      ref={drag?.setNodeRef}
+      style={drag?.style}
+      className={`flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200 ${
+        drag?.isDragging ? 'relative z-10 shadow-xl ring-2 ring-brand-600' : ''
+      }`}
+    >
       <div className="relative aspect-[4/3] bg-brand-50">
         {item.imageUrl ? (
           <img
@@ -52,8 +59,8 @@ export default function ItemCard({ item, categoryLabel, canEdit, onEdit }) {
             {BADGE_LABEL[item.badge] ?? item.badge}
           </span>
         )}
+        {drag?.handle}
       </div>
-
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-start gap-2">
           <VegMark isVeg={item.isVeg} />
@@ -62,10 +69,9 @@ export default function ItemCard({ item, categoryLabel, canEdit, onEdit }) {
         {categoryLabel && <p className="text-xs text-stone-600">{categoryLabel}</p>}
         <p className="text-sm text-stone-700">
           <span className="font-semibold text-stone-900">{formatPrice(item.price)}</span>
-          {sizes > 0 && ` · ${sizes} ${sizes === 1 ? 'size' : 'sizes'}`}
-          {` · ${item.prepTimeMinutes} min`}
+          {sizes > 0 && ` \u00B7 ${sizes} ${sizes === 1 ? 'size' : 'sizes'}`}
+          {` \u00B7 ${item.prepTimeMinutes} min`}
         </p>
-
         <div className="mt-auto flex items-center justify-between border-t border-stone-100 pt-2">
           <span className="text-sm font-medium text-stone-800">
             {item.isAvailable ? 'Available' : 'Unavailable'}

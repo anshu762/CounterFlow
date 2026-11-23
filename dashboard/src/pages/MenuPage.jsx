@@ -4,7 +4,7 @@ import PageHeader from '../components/ui/PageHeader';
 import ErrorState from '../components/ui/ErrorState';
 import CategoryPanel from '../components/menu/CategoryPanel';
 import CategoryDialog from '../components/menu/CategoryDialog';
-import ItemCard from '../components/menu/ItemCard';
+import ItemGrid from '../components/menu/ItemGrid';
 import ItemDialog from '../components/menu/ItemDialog';
 import { checkboxClass, inputClass, primaryButton, secondaryButton } from '../components/settings/styles';
 import { useAdminMenu } from '../hooks/useAdminMenu';
@@ -79,6 +79,10 @@ function MenuBrowser({ groups, canEdit }) {
   }, [groups, showAll, current, query, diet, unavailableOnly]);
 
   const visible = entries.slice(0, limit);
+
+  // Items can be dragged only by the owner, inside one category, with no filter hiding any item.
+  const allIds = current ? current.items.map((i) => i.id) : [];
+  const canReorder = Boolean(canEdit && !showAll && current && !filtersActive && entries.length > 1);
 
   const pickCategory = (id) => {
     setSelectedId(id);
@@ -265,6 +269,13 @@ function MenuBrowser({ groups, canEdit }) {
                 {entries.length} {entries.length === 1 ? 'item' : 'items'}
                 {filtersActive ? ' match your filters' : ''}
               </p>
+              {canEdit && !showAll && current && current.items.length > 1 && (
+                <p className="mt-1 text-sm text-stone-600">
+                  {canReorder
+                    ? 'Drag the handle on a card to change the order.'
+                    : 'Clear the filters to change the order.'}
+                </p>
+              )}
             </div>
             {canEdit && !showAll && current && (
               <div className="flex flex-wrap gap-2">
@@ -309,17 +320,16 @@ function MenuBrowser({ groups, canEdit }) {
             )
           ) : (
             <>
-              <ul className={GRID}>
-                {visible.map(({ item, label }) => (
-                  <ItemCard
-                    key={item.id}
-                    item={item}
-                    categoryLabel={label}
-                    canEdit={canEdit}
-                    onEdit={(it) => setDialog({ type: 'item', item: it })}
-                  />
-                ))}
-              </ul>
+              <ItemGrid
+                key={current?.id ?? 'all'}
+                className={GRID}
+                categoryId={current?.id}
+                allIds={allIds}
+                entries={visible}
+                canEdit={canEdit}
+                reorderable={canReorder}
+                onEdit={(it) => setDialog({ type: 'item', item: it })}
+              />
               {entries.length > visible.length && (
                 <div className="mt-6 flex justify-center">
                   <button
@@ -353,7 +363,6 @@ export default function MenuPage() {
       </>
     );
   }
-
   if (!q.data) {
     return (
       <>
@@ -366,6 +375,5 @@ export default function MenuPage() {
       </>
     );
   }
-
   return <MenuBrowser groups={q.data} canEdit={canEdit} />;
 }
