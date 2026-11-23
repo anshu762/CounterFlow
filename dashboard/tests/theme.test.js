@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { accentScale, brandScale, mix } from '../src/theme/color';
 import { THEMES, resolveTheme } from '../src/theme/themes';
 
-const HEX = /^#[0-9a-f]{6}$/;
+const HEX = /^#[0-9a-f]{6}$/i;
+
 const brightness = (hex) => {
   const n = parseInt(hex.slice(1), 16);
   return ((n >> 16) & 255) + ((n >> 8) & 255) + (n & 255);
