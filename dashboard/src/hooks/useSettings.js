@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../lib/api';
 
-// Full settings: owner or staff only.
-export function useSettings() {
+// Full settings: owner or staff only. `options` lets a page override query behaviour.
+export function useSettings(options = {}) {
   return useQuery({
     queryKey: ['settings'],
     queryFn: async () => (await api.get('/api/settings')).data.settings,
     staleTime: 30_000,
+    ...options,
   });
 }

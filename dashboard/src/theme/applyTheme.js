@@ -9,7 +9,7 @@ export function applyTheme(theme) {
   const root = document.documentElement;
   const t = resolveTheme(theme);
 
-  if (t.id === DEFAULT_THEME_ID) {
+  if (t.id === DEFAULT_THEME_ID && !t.customised) {
     for (const s of BRAND_STEPS) root.style.removeProperty(`--color-brand-${s}`);
     for (const s of ACCENT_STEPS) root.style.removeProperty(`--color-gold-${s}`);
     root.style.removeProperty('--color-paper');

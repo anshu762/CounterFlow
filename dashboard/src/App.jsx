@@ -15,6 +15,7 @@ import { applyTheme } from './theme/applyTheme';
 
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const OverviewPage = lazy(() => import('./pages/OverviewPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const ComingSoonPage = lazy(() => import('./pages/ComingSoonPage'));
 
 const soonRoutes = (items) =>
@@ -50,6 +51,7 @@ export default function App() {
           <Route element={<RequireAuth />}>
             <Route element={<AppShell />}>
               <Route index element={<OverviewPage />} />
+              <Route path="settings" element={<SettingsPage />} />
               {soonRoutes(SOON.filter((item) => !item.roles))}
               <Route element={<RequireRole roles={['owner']} />}>
                 {soonRoutes(SOON.filter((item) => item.roles))}

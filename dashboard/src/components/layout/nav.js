@@ -36,14 +36,7 @@ export const NAV_ITEMS = [
     phase: 'Phase 5',
     blurb: 'Sales, busy hours and best sellers across app and walk-in orders.',
   },
-  {
-    to: '/settings',
-    label: 'Settings',
-    icon: Settings,
-    soon: true,
-    phase: 'Phase 1F',
-    blurb: 'Café details, GST, opening hours, prep time and theme.',
-  },
+  { to: '/settings', label: 'Settings', icon: Settings },
   {
     to: '/staff',
     label: 'Staff',

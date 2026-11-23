@@ -59,7 +59,7 @@ jobs:
         run: npm run migrate:up:env
 
   dashboard:
-    name: Dashboard (lint, build)
+    name: Dashboard (lint, test, build)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -73,6 +73,7 @@ jobs:
           cache-dependency-path: dashboard/package-lock.json
       - run: npm ci
       - run: npm run lint
+      - run: npm test
       - run: npm run build
         env:
           VITE_API_URL: http://localhost:5000
