@@ -90,7 +90,7 @@ export function createApp({
   app.use('/api/cafe', createCafePublicRouter({ service: settingsService }));
   app.use('/api/settings', createSettingsRouter({ service: settingsService, adminStore }));
   app.use('/api/users', createUsersRouter({ service: usersService, adminStore }));
-  app.use('/api', createMenuModule({ pool, authStore, menuStore, imageStorage }));
+  app.use('/api', createMenuModule({ pool, authStore: adminStore, menuStore, imageStorage }));
 
   // More feature modules are mounted under /api in later parts.
   app.use(notFound);

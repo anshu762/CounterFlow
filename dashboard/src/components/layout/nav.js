@@ -12,14 +12,7 @@ export const NAV_ITEMS = [
     phase: 'Phase 3',
     blurb: 'New orders arrive here live, and you move them from placed to completed.',
   },
-  {
-    to: '/menu',
-    label: 'Menu',
-    icon: UtensilsCrossed,
-    soon: true,
-    phase: 'Phase 1G',
-    blurb: 'Manage categories, items, sizes, photos and availability.',
-  },
+  { to: '/menu', label: 'Menu', icon: UtensilsCrossed },
   {
     to: '/feedback',
     label: 'Feedback',
